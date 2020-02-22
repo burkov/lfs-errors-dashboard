@@ -1,0 +1,25 @@
+
+.container {
+    width: 350px;
+    display: flex;
+    align-items: center;
+}
+
+.userNameSpan {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.avatarContainer {
+    width: 48px;
+    margin-right: 10px;
+}
+
+.nameAndButtonContainer {
+    width: 100%;
+}
+
+/*.buttonContainer {*/
+/*    min-width: 108px;*/
+/*}*/

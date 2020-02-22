@@ -1,0 +1,25 @@
+.header {
+    margin: 0;
+    padding: 10px 0;
+    border-bottom: 1px solid lightgray;
+}
+
+.logoContainer {
+    min-width: 400px;
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    margin-right: 10px;
+}
+
+.logoTitle {
+    margin: 0;
+    padding: 0;
+}
+
+.mainContainer {
+    width: 1050px;
+    margin: 10px auto;
+}
