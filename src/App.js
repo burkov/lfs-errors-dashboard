@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet/es/Helmet';
 import { Col, Row } from 'antd';
 import LfsLogo from './images/lfs_logo.png';
@@ -8,12 +8,11 @@ import styles from './App.module.css';
 import 'antd/dist/antd.css';
 import SignStatusBlock from './SignStatusBlock';
 import LoginBanner from './LoginBanner';
+import { initGoogleAuthLib } from './google-auth';
 
 
 const clientId = '797091362316-t4kt893ttu0ls2gdbjhbq7pn7g2r22tq.apps.googleusercontent.com';
-const scopes = {
-  readonly: 'https://www.googleapis.com/auth/gmail.readonly',
-};
+const scope = 'https://www.googleapis.com/auth/gmail.readonly';
 // const loginHint = 'alexander.burkov@jetbrains.com';
 const hostedDomain = 'jetbrains.com';
 
@@ -77,7 +76,18 @@ function App() {
   // }, [ isSignedIn ]);
 
   const name = 'alexander.burkov@jetbrains.com';
-  const [ isSigned, setSigned ] = useState(true);
+  const [ isSigned, setSigned ] = useState(false);
+
+  useEffect(() => {
+    initGoogleAuthLib({
+      clientId,
+      hostedDomain,
+      scope,
+      onInit: (gapi) => {
+        console.log(gapi.currentUser.get().getBasicProfile());
+      },
+    });
+  }, []);
 
   return (
     <>
