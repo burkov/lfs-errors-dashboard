@@ -1,7 +1,7 @@
 import {PROGRESS_DEACTIVATE, PROGRESS_INCREMENT, PROGRESS_ACTIVATE} from '../actions/actionTypes';
 
 const initialState = {
-  active: true,
+  active: false,
   max: undefined,
   current: undefined,
   message: 'Loading...',

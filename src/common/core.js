@@ -1,6 +1,7 @@
 import localforage from 'localforage';
 import {Set} from 'immutable';
 import _ from 'lodash';
+import dayjs from 'dayjs';
 
 export const filterNewIds = async (ids) => {
   const knownKeys = Set(await localforage.keys());
@@ -24,10 +25,13 @@ export const saveMessages = async (messages) => {
 export const getAggregatedMessages = async (ids) => {
   const messages = await Promise.all(ids.map((id) => localforage.getItem(id)));
   const result = _.values(_.groupBy(messages, ({ subject }) => {
-    return subject.slice(0, 8);
+    return subject.slice(0, 20);
   })).map((entries) => {
-    const last = _.maxBy(entries, 'date');
+    entries.forEach((e) => {
+      e.timestamp = dayjs(e.date).unix();
+    });
+    const last = _.maxBy(entries, 'timestamp');
     return { ...last, number: entries.length };
   });
-  return _.reverse(_.sortBy(result, 'date'));
+  return _.reverse(_.sortBy(result, 'timestamp'));
 };
