@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import _ from 'lodash';
+import { awaitWindowLoad } from './common';
 
 const initGoogleAuthLib = ({ clientId, hostedDomain, scope, onInit, onError }) => {
   const clientConfig = {
@@ -10,18 +11,13 @@ const initGoogleAuthLib = ({ clientId, hostedDomain, scope, onInit, onError }) =
     ux_mode: 'popup',
     scope,
   };
-  const googleLoadTimer = setInterval(() => {
-    const gapi = window.gapi;
-    if (gapi) {
-      clearInterval(googleLoadTimer);
-      gapi.load('auth2', () => {
-        return gapi.auth2.init(clientConfig)
-          .then((auth2) => {
-            onInit(auth2);
-          });
-      }, onError);
-    }
-  }, 10);
+  awaitWindowLoad(() => window.gapi, (gapi) => {
+    gapi.load(
+      'auth2',
+      () => gapi.auth2.init(clientConfig).then(onInit, onError),
+      onError,
+    );
+  });
 };
 
 

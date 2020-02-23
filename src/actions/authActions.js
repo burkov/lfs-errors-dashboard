@@ -6,7 +6,6 @@ export const init = ({ signIn, signOut }) => ({
   signOut,
 });
 
-
 export const initError = () => ({
   type: AUTH_INIT_ERROR,
 });
