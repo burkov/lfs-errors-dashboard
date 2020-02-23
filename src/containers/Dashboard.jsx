@@ -8,9 +8,10 @@ import Header from '../components/Header';
 import LoadingBanner from '../components/LoadingBanner';
 import LoginBanner from '../components/LoginBanner';
 import ErrorsTable from '../components/ErrorsTable';
-import {listAllIds, useGoogleMail} from '../common/google-mail';
+import {getMessage, getMessages, listAllIds, useGoogleMail} from '../common/google-mail';
 import {useAsyncEffect} from '../common/common';
 import * as progressActions from '../actions/progressActions';
+import {filterNewIds, getAggregatedMessages, saveMessages} from '../common/core';
 
 const clientId = '797091362316-t4kt893ttu0ls2gdbjhbq7pn7g2r22tq.apps.googleusercontent.com';
 const scope = 'https://www.googleapis.com/auth/gmail.readonly';
@@ -34,6 +35,7 @@ const Dashboard = (
     deactivateProgress,
   },
 ) => {
+  const [messages, setMessages] = useState([]);
   useGoogleAuth({
     clientId,
     hostedDomain,
@@ -50,19 +52,19 @@ const Dashboard = (
   });
   // const count = useRef(0);
   useAsyncEffect(async () => {
-    deactivateProgress();
     if (client !== undefined && isSignedIn) {
-      // setInterval(() => {
-      //   count.current = count.current + 1;
-      //   updateProgress({
-      //     active: count.current < 100,
-      //     max: 100,
-      //     current: count.current,
-      //     message: `Loading emails...`,
-      //   });
-      // }, 100);
+      activateProgress({ message: `Loading emails...` });
       const ids = await listAllIds(client);
-      console.log(ids);
+      activateProgress({ message: `Found ${ids.length} emails in LFS mail list` });
+      const newIds = await filterNewIds(ids);
+      activateProgress({ message: `Fetching ${newIds.length} new emails` });
+      const result = await getMessages(client, newIds);
+      await saveMessages(result);
+      console.log(`Done saving`);
+      activateProgress({ message: `Processing messages` });
+      setMessages(await getAggregatedMessages(ids));
+      console.log(`Done processing`);
+      deactivateProgress();
     }
   }, [ client, isSignedIn ]);
 
@@ -79,7 +81,7 @@ const Dashboard = (
           <LoadingBanner current={current} max={max} message={message}/> :
           (!isSignedIn ?
               <LoginBanner onSignInClicked={signIn} disabled={!initialized}/> :
-              <ErrorsTable/>
+              <ErrorsTable messages={messages}/>
           )}
       </main>
     </>

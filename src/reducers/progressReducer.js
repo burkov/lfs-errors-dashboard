@@ -9,10 +9,10 @@ const initialState = {
 
 
 export const progressReducer = (state = initialState, action) => {
-  const { type, message, active, max, current } = action;
+  const { type, message, max, current } = action;
   switch (type) {
     case PROGRESS_ACTIVATE:
-      return { ...state, active, max, current, message };
+      return { ...state, active: true, max, current, message };
     case PROGRESS_INCREMENT:
       return { ...state, current: state.current + 1 };
     case PROGRESS_DEACTIVATE:
