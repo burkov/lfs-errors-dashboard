@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Table } from 'antd';
 import { connect } from 'react-redux';
 import { useAsyncEffect } from '../common/common';
 import { listAllIds } from '../common/google-mail';
+import * as progressActions from '../actions/progressActions';
 
 const dataSource = [
   {
@@ -37,13 +38,8 @@ const columns = [
   },
 ];
 
-const ErrorsTable = ({ client }) => {
-  useAsyncEffect(async () => {
-    if(client !== undefined) {
-      const ids = await listAllIds(client);
-      console.log(ids);
-    }
-  }, [client]);
+const ErrorsTable = ({ client, updateProgress }) => {
+
 
   return (
     <>
@@ -53,6 +49,7 @@ const ErrorsTable = ({ client }) => {
 };
 
 const mapStateToProps = ({ mail: { client } }) => ({ client });
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ErrorsTable);

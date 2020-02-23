@@ -8,7 +8,9 @@ import Header from '../components/Header';
 import LoadingBanner from '../components/LoadingBanner';
 import LoginBanner from '../components/LoginBanner';
 import ErrorsTable from './ErrorsTable';
-import { useGoogleMail } from '../common/google-mail';
+import { listAllIds, useGoogleMail } from '../common/google-mail';
+import { useAsyncEffect } from '../common/common';
+import * as progressActions from '../actions/progressActions';
 
 const clientId = '797091362316-t4kt893ttu0ls2gdbjhbq7pn7g2r22tq.apps.googleusercontent.com';
 const scope = 'https://www.googleapis.com/auth/gmail.readonly';
@@ -18,16 +20,16 @@ const hostedDomain = 'jetbrains.com';
 const Dashboard = (
   {
     initialized,
-    isSignedIn,
-    signIn,
-    signOut,
-    profile: { name, imageUrl },
+    auth: { isSignedIn, signIn, signOut, profile: { name, imageUrl } },
+    mail: { client },
+    progress: { current, max, message },
     onAuthInit,
     onAuthInitError,
     onSignedIn,
     onSignedOut,
     onMailInit,
     onMailInitError,
+    updateProgress,
   },
 ) => {
   useGoogleAuth({
@@ -44,6 +46,18 @@ const Dashboard = (
     onInitialized: onMailInit,
     onInitializationError: onMailInitError,
   });
+  useAsyncEffect(async () => {
+    updateProgress({
+      message: 'Loading emails',
+    });
+    setTimeout(() => {
+
+    }, 1000);
+    // if (client !== undefined) {
+    //   const ids = await listAllIds(client);
+    //   console.log(ids);
+    // }
+  }, [ client ]);
 
   return (
     <>
@@ -55,7 +69,8 @@ const Dashboard = (
       />
       <main className={styles.mainContainer}>
         {!initialized ?
-          <LoadingBanner/> : (!isSignedIn ?
+          <LoadingBanner current={current} max={max} message={message}/> :
+          (!isSignedIn ?
               <LoginBanner onSignInClicked={signIn} disabled={!initialized}/> :
               <ErrorsTable/>
           )}
@@ -66,13 +81,17 @@ const Dashboard = (
 
 const mapStateToProps = (
   {
-    auth: { initialized: authInitialized, isSignedIn, signIn, signOut, profile, tokens },
-    mail: { initialized: mailInitialized },
+    auth: { initialized: authInitialized, isSignedIn, signIn, signOut, profile },
+    mail: { initialized: mailInitialized, client },
+    progress: { active, current, max, message },
   },
 ) => {
-  const initialized = authInitialized && mailInitialized;
+  const initialized = authInitialized && mailInitialized && !active;
   return {
-    initialized, isSignedIn, signIn, signOut, profile, tokens,
+    initialized,
+    auth: { isSignedIn, signIn, signOut, profile },
+    mail: { client },
+    progress: { active, current, max, message },
   };
 };
 
@@ -83,6 +102,7 @@ const mapDispatchToProps = {
   onSignedOut: authActions.signOut,
   onMailInit: mailActions.init,
   onMailInitError: mailActions.initError,
+  updateProgress: progressActions.updateProgress,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

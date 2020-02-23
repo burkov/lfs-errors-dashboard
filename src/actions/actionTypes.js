@@ -5,3 +5,5 @@ export const AUTH_SIGN_OUT = 'AUTH_SIGN_OUT';
 
 export const MAIL_INIT = 'MAIL_INIT';
 export const MAIL_INIT_ERROR = 'MAIL_INIT_ERROR';
+
+export const PROGRESS_UPDATE = 'PROGRESS_UPDATE';

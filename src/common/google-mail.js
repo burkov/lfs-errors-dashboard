@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { awaitWindowLoad } from './common';
+import _ from 'lodash';
 
 const initGmailLib = ({ apiKey, onInit, onError }) => {
   const params = {
@@ -28,13 +29,19 @@ export const useGoogleMail = ({ apiKey, onInitialized, onInitializationError }) 
 };
 
 export const listAllIds = async (client) => {
-  
-  const response = await client.users.messages.list({
-    userId: 'me',
-    q: 'list:(<jetprofile-prod-lfs-notifications.jetbrains.com>)'
-  });
+  let pageToken = undefined;
+  let result = [];
+  do {
+    const { result: { messages, nextPageToken } } = await client.users.messages.list({
+      userId: 'me',
+      q: 'list:(<jetprofile-prod-lfs-notifications.jetbrains.com>)',
+      pageToken,
+    });
+    result = result.concat(messages);
+    pageToken = nextPageToken;
+  } while (!_.isNil(pageToken));
 
-  return response;
+  return result;
 };
 
 

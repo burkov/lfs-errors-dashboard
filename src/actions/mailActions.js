@@ -1,4 +1,4 @@
-import { MAIL_INIT, MAIL_INIT_ERROR } from './actionTypes';
+import { MAIL_INIT, MAIL_INIT_ERROR, MAIL_PROGRESS_UPDATE } from './actionTypes';
 
 export const init = (client) => ({
   type: MAIL_INIT, client,

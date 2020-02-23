@@ -3,11 +3,11 @@ import { Spin } from 'antd';
 import styles from './LoadingBanner.module.css';
 
 
-const LoadingBanner = () => {
+const LoadingBanner = ({ current, max, message }) => {
   return (
     <div className={styles.container}>
       <Spin size='large'/>
-      <p>Loading...</p>
+      <p>{message}</p>
     </div>
   );
 };
