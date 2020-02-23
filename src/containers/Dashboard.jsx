@@ -1,15 +1,15 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import styles from './Dashboard.module.css';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import * as authActions from '../actions/authActions';
 import * as mailActions from '../actions/mailActions';
-import { useGoogleAuth } from '../common/google-auth';
+import {useGoogleAuth} from '../common/google-auth';
 import Header from '../components/Header';
 import LoadingBanner from '../components/LoadingBanner';
 import LoginBanner from '../components/LoginBanner';
-import ErrorsTable from './ErrorsTable';
-import { listAllIds, useGoogleMail } from '../common/google-mail';
-import { useAsyncEffect } from '../common/common';
+import ErrorsTable from '../components/ErrorsTable';
+import {listAllIds, useGoogleMail} from '../common/google-mail';
+import {useAsyncEffect} from '../common/common';
 import * as progressActions from '../actions/progressActions';
 
 const clientId = '797091362316-t4kt893ttu0ls2gdbjhbq7pn7g2r22tq.apps.googleusercontent.com';
@@ -29,7 +29,9 @@ const Dashboard = (
     onSignedOut,
     onMailInit,
     onMailInitError,
-    updateProgress,
+    activateProgress,
+    incrementProgress,
+    deactivateProgress,
   },
 ) => {
   useGoogleAuth({
@@ -46,18 +48,23 @@ const Dashboard = (
     onInitialized: onMailInit,
     onInitializationError: onMailInitError,
   });
+  // const count = useRef(0);
   useAsyncEffect(async () => {
-    updateProgress({
-      message: 'Loading emails',
-    });
-    setTimeout(() => {
-
-    }, 1000);
-    // if (client !== undefined) {
-    //   const ids = await listAllIds(client);
-    //   console.log(ids);
-    // }
-  }, [ client ]);
+    deactivateProgress();
+    if (client !== undefined && isSignedIn) {
+      // setInterval(() => {
+      //   count.current = count.current + 1;
+      //   updateProgress({
+      //     active: count.current < 100,
+      //     max: 100,
+      //     current: count.current,
+      //     message: `Loading emails...`,
+      //   });
+      // }, 100);
+      const ids = await listAllIds(client);
+      console.log(ids);
+    }
+  }, [ client, isSignedIn ]);
 
   return (
     <>
@@ -102,7 +109,9 @@ const mapDispatchToProps = {
   onSignedOut: authActions.signOut,
   onMailInit: mailActions.init,
   onMailInitError: mailActions.initError,
-  updateProgress: progressActions.updateProgress,
+  activateProgress: progressActions.activateProgress,
+  incrementProgress: progressActions.incrementProgress,
+  deactivateProgress: progressActions.deactivateProgress,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

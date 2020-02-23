@@ -1,9 +1,5 @@
 import React from 'react';
 import { Table } from 'antd';
-import { connect } from 'react-redux';
-import { useAsyncEffect } from '../common/common';
-import { listAllIds } from '../common/google-mail';
-import * as progressActions from '../actions/progressActions';
 
 const dataSource = [
   {
@@ -38,9 +34,7 @@ const columns = [
   },
 ];
 
-const ErrorsTable = ({ client, updateProgress }) => {
-
-
+const ErrorsTable = ( ) => {
   return (
     <>
       <Table dataSource={dataSource} columns={columns} size='small'/>
@@ -48,8 +42,5 @@ const ErrorsTable = ({ client, updateProgress }) => {
   );
 };
 
-const mapStateToProps = ({ mail: { client } }) => ({ client });
-const mapDispatchToProps = {
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ErrorsTable);
+export default ErrorsTable;

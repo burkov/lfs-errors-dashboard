@@ -1,7 +1,12 @@
 .container {
+    width: 500px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    margin-top: 50px;
+    margin: 50px auto;
+}
+
+.message {
+    margin-top: 20px;
 }
