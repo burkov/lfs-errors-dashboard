@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useReducer } from 'react';
 import { Helmet } from 'react-helmet/es/Helmet';
 import { Col, Row } from 'antd';
 import LfsLogo from './images/lfs_logo.png';
 import styles from './App.module.css';
-
+import _ from 'lodash';
 
 import 'antd/dist/antd.css';
 import SignStatusBlock from './SignStatusBlock';
 import LoginBanner from './LoginBanner';
-import { initGoogleAuthLib } from './google-auth';
+import { useGoogleAuth } from './google-auth';
 
 
 const clientId = '797091362316-t4kt893ttu0ls2gdbjhbq7pn7g2r22tq.apps.googleusercontent.com';
@@ -16,78 +16,76 @@ const scope = 'https://www.googleapis.com/auth/gmail.readonly';
 // const loginHint = 'alexander.burkov@jetbrains.com';
 const hostedDomain = 'jetbrains.com';
 
+const actions = {
+  init: 'INIT',
+  initError: 'INIT_ERROR',
+  signIn: 'SIGN_IN',
+  signOut: 'SIGN_OUT',
+};
+
+
+const throwNotInitialized = () => {
+  throw Error('gauth is not initialized yet');
+};
+
+const initialState = {
+  initialized: false,
+  isSignedIn: false,
+  profile: {},
+  tokens: {},
+  error: undefined,
+  signIn: throwNotInitialized,
+  signOut: throwNotInitialized,
+};
+
+const reducer = (state, action) => {
+  console.log(`${JSON.stringify(action)} => ${JSON.stringify(state)}`);
+  const { signIn, signOut, error, profile, tokens } = action;
+  switch (action.type) {
+    case actions.init:
+      return { ...state, initialized: true, signIn, signOut };
+    case actions.initError:
+      return { ...initialState, error };
+    case actions.signIn:
+      return { ...state, isSignedIn: true, profile, tokens };
+    case action.signOut:
+      return { ...state, isSignedIn: false, profile: {}, tokens: {} };
+    default:
+      return state;
+  }
+};
 
 function App() {
-  // const [ debugInfo, setDebugInfo ] = useState({});
-  // const silent = () => {
-  //   const auth = window.gapi.auth2.getAuthInstance();
-  //   const user = auth.currentUser.get();
-  //   const authResponse = user.getAuthResponse();
-  //
-  //   setAndLog(authResponse);
-  // };
-  //
-  // const setAndLog = (v) => {
-  //   // console.log(v);
-  //   // setDebugInfo(v);
-  // };
-  //
-  //
-  // const onSuccess = (res) => {
-  //   // console.log(`called: ${res}`);
-  // };
+  const [ authState, dispatch ] = useReducer(reducer, initialState, _.identity);
+  useGoogleAuth({
+    clientId,
+    hostedDomain,
+    scope,
+    onSignedIn: ({ profile, tokens }) => dispatch({ type: actions.signIn, profile, tokens }),
+    onSignedOut: () => dispatch({ type: actions.signOut }),
+    onInitialized: ({ signIn, signOut }) => dispatch({ type: actions.init, signIn, signOut }),
+    onInitializationError: (error) => dispatch({ type: actions.initError, error }),
+  });
+  const {
+    initialized,
+    error,
+    signIn,
+    signOut,
+    profile,
+    tokens,
+    isSignedIn,
+  } = authState;
 
-  // const [ isSignedIn, setSignedIn ] = useState(false);
+  console.log(`useGoogleAuth: {
+    initialize: ${initialized},
+    isSignedIn: ${isSignedIn},
+    signIn: ${signIn},
+    signOut: ${signOut},
+    profile: ${profile},
+    tokens: ${tokens},
+  }`);
 
-  // const options = {
-  //   onSuccess,
-  //   onFailure: setAndLog,
-  //   onLogoutFailure: setAndLog,
-  //   onRequest: _.noop,
-  //   clientId,
-  //   fetchBasicProfile: true,
-  //   hostedDomain,
-  //   scope: scopes.readonly,
-  //   cookiePolicy: 'single_host_origin',
-  //   jsSrc: 'https://apis.google.com/js/api.js',
-  // };
-
-  // const { signIn, loaded: signInScriptLoaded } = useGoogleLogin(options);
-  // const { signOut, loaded: signOutScriptLoaded } = useGoogleLogout(options);
-
-
-  // useEffect(() => {
-  //   console.log(`signInScriptLoaded: ${signInScriptLoaded}`);
-  //   if (signInScriptLoaded) {
-  //     const auth = window.gapi.auth2.getAuthInstance();
-  //     auth.isSignedIn.listen(setSignedIn);
-  //   }
-  // }, [ signInScriptLoaded ]);
-
-  // useEffect(() => {
-  //   console.log(`state: ${isSignedIn ? 'SIGNED IN' : 'SIGNED OUT'}`);
-  //   if (isSignedIn) {
-  //     const auth = window.gapi.auth2.getAuthInstance();
-  //     const user = auth.currentUser.get();
-  //     const authResponse = user.getAuthResponse();
-  //     console.log(`fetching user info: ${JSON.stringify(user)}`);
-  //   } else {
-  //   }
-  // }, [ isSignedIn ]);
-
-  const name = 'alexander.burkov@jetbrains.com';
-  const [ isSigned, setSigned ] = useState(false);
-
-  useEffect(() => {
-    initGoogleAuthLib({
-      clientId,
-      hostedDomain,
-      scope,
-      onInit: (gapi) => {
-        console.log(gapi.currentUser.get().getBasicProfile());
-      },
-    });
-  }, []);
+  const { name, imageUrl } = profile;
 
   return (
     <>
@@ -103,15 +101,16 @@ function App() {
             </div>
           </Col>
           <Col offset={10} span={4}>
-            {isSigned && <SignStatusBlock name={name}
-                                          onSignOutClicked={() => setSigned(false)}
+            {isSignedIn && <SignStatusBlock name={name}
+                                            userPickLink={imageUrl}
+                                            onSignOutClicked={signOut}
             />}
           </Col>
         </Row>
       </header>
       <main className={styles.mainContainer}>
-        {!isSigned ?
-          <LoginBanner onSignInClicked={() => setSigned(true)}/> :
+        {!isSignedIn ?
+          <LoginBanner onSignInClicked={signIn} disabled={!initialized}/> :
           <div>The app</div>
         }
       </main>

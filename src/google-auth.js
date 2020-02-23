@@ -1,20 +1,7 @@
+import { useEffect } from 'react';
+import _ from 'lodash';
 
-const withAuth2 = (func) => {
-  const auth2 = window.gapi.auth2.getAuthInstance();
-  if (auth2 != null) {
-    func(auth2);
-  } else console.error(`FIXME ERROR`);
-};
-
-export const signOut = ({ onSuccess }) => {
-  withAuth2((auth2) => auth2.signOut().then(auth2.disconnect().then(onSuccess)));
-};
-
-export const signIn = ({ onSuccess, onError }) => {
-  withAuth2((auth2) => auth2.signIn().then(res => onSuccess(res), err => onError(err)));
-};
-
-export const initGoogleAuthLib = ({ clientId, hostedDomain, scope, onInit, onError }) => {
+const initGoogleAuthLib = ({ clientId, hostedDomain, scope, onInit, onError }) => {
   const clientConfig = {
     client_id: clientId,
     cookie_policy: 'single_host_origin',
@@ -24,16 +11,75 @@ export const initGoogleAuthLib = ({ clientId, hostedDomain, scope, onInit, onErr
     scope,
   };
   const googleLoadTimer = setInterval(() => {
-    console.log('called');
     const gapi = window.gapi;
     if (gapi) {
       clearInterval(googleLoadTimer);
       gapi.load('auth2', () => {
         return gapi.auth2.init(clientConfig)
-          .then((gauth) => {
-            onInit(gauth);
+          .then((auth2) => {
+            onInit(auth2);
           });
       }, onError);
     }
   }, 10);
 };
+
+
+const getAuthData = (auth2) => {
+  const user = auth2.currentUser.get();
+  if (user === undefined) return {
+    isSignedIn: false,
+    profile: {},
+    tokens: {},
+  };
+  const basicProfile = user.getBasicProfile();
+  const authResponse = user.getAuthResponse();
+  const isSignedIn = user.isSignedIn();
+  const profile = basicProfile === undefined ? {} : {
+    googleId: basicProfile.getId(),
+    imageUrl: basicProfile.getImageUrl(),
+    email: basicProfile.getEmail(),
+    name: basicProfile.getName(),
+    givenName: basicProfile.getGivenName(),
+    familyName: basicProfile.getFamilyName(),
+  };
+  const tokens = authResponse === undefined ? {} : {
+    idToken: authResponse.id_token,
+    accessToken: authResponse.access_token,
+  };
+  return {
+    isSignedIn,
+    profile,
+    tokens,
+  };
+};
+
+export const useGoogleAuth = (
+  {
+    clientId,
+    hostedDomain,
+    scope,
+    onInitialized,
+    onInitializationError,
+    onSignedIn,
+    onSignedOut,
+  }) => {
+  useEffect(() => {
+    const onInit = (auth2) => {
+      auth2.isSignedIn.listen((isSignedIn) => {
+        isSignedIn ? onSignedIn(getAuthData(auth2)) : onSignedOut();
+      });
+      const signIn = () => auth2.signIn().then(_.noop, err => console.error(`Got error:`, err));
+      const signOut = () => auth2.signOut().then(auth2.disconnect());
+      onInitialized({ signIn, signOut });
+      const authData = getAuthData(auth2);
+      const { isSignedIn } = authData;
+      if (isSignedIn) onSignedIn(authData);
+    };
+    const onError = (error) => {
+      onInitializationError(error);
+    };
+    initGoogleAuthLib({ clientId, hostedDomain, scope, onInit, onError });
+  }, []);
+};
+
