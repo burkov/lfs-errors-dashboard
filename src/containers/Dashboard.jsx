@@ -9,7 +9,6 @@ import LoadingBanner from '../components/LoadingBanner';
 import LoginBanner from '../components/LoginBanner';
 import ErrorsTable from './ErrorsTable';
 import { useGoogleMail } from '../common/google-mail';
-import _ from 'lodash';
 
 const clientId = '797091362316-t4kt893ttu0ls2gdbjhbq7pn7g2r22tq.apps.googleusercontent.com';
 const scope = 'https://www.googleapis.com/auth/gmail.readonly';
@@ -28,7 +27,7 @@ const Dashboard = (
     onSignedIn,
     onSignedOut,
     onMailInit,
-    onMailInitError
+    onMailInitError,
   },
 ) => {
   useGoogleAuth({
@@ -41,8 +40,6 @@ const Dashboard = (
     onInitializationError: onAuthInitError,
   });
   useGoogleMail({
-    clientId,
-    scope,
     apiKey,
     onInitialized: onMailInit,
     onInitializationError: onMailInitError,

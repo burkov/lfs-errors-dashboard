@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
 import { awaitWindowLoad } from './common';
 
-const initGmailLib = ({ apiKey, clientId, scope, onInit, onError }) => {
+const initGmailLib = ({ apiKey, onInit, onError }) => {
   const params = {
-    apiKey,
-    clientId,
+    apiKey: apiKey,
     discoveryDocs: [ 'https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest' ],
   };
   awaitWindowLoad(() => window.gapi, (gapi) => {
@@ -16,19 +15,26 @@ const initGmailLib = ({ apiKey, clientId, scope, onInit, onError }) => {
   });
 };
 
-export const useGoogleMail = ({ clientId, apiKey, scope, onInitialized, onInitializationError }) => {
+export const useGoogleMail = ({ apiKey, onInitialized, onInitializationError }) => {
   useEffect(() => {
     initGmailLib({
       apiKey,
-      clientId,
-      scope,
       onInit: () => {
-        debugger;
         onInitialized(window.gapi.client.gmail);
       },
       onError: onInitializationError,
     });
   }, []);
+};
+
+export const listAllIds = async (client) => {
+  
+  const response = await client.users.messages.list({
+    userId: 'me',
+    q: 'list:(<jetprofile-prod-lfs-notifications.jetbrains.com>)'
+  });
+
+  return response;
 };
 
 

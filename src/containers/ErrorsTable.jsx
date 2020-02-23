@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Table } from 'antd';
 import { connect } from 'react-redux';
+import { useAsyncEffect } from '../common/common';
+import { listAllIds } from '../common/google-mail';
 
 const dataSource = [
   {
@@ -36,7 +38,13 @@ const columns = [
 ];
 
 const ErrorsTable = ({ client }) => {
-  console.log(client)
+  useAsyncEffect(async () => {
+    if(client !== undefined) {
+      const ids = await listAllIds(client);
+      console.log(ids);
+    }
+  }, [client]);
+
   return (
     <>
       <Table dataSource={dataSource} columns={columns} size='small'/>

@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 export const awaitWindowLoad = (selectorFunc, onReady) => {
   const timer = setInterval(
     () => {
@@ -8,4 +10,13 @@ export const awaitWindowLoad = (selectorFunc, onReady) => {
       }
     },
     100);
+};
+
+export const useAsyncEffect = (func, deps) => {
+  useEffect(() => {
+    const doAsync = async () => {
+      await func()
+    };
+    doAsync();
+  }, deps);
 };
