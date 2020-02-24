@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/lfs-errors-dashboard/static/css/main.461ceae6.chunk.css",
-    "main.js": "/lfs-errors-dashboard/static/js/main.c8d447c1.chunk.js",
-    "main.js.map": "/lfs-errors-dashboard/static/js/main.c8d447c1.chunk.js.map",
+    "main.js": "/lfs-errors-dashboard/static/js/main.b248bd07.chunk.js",
+    "main.js.map": "/lfs-errors-dashboard/static/js/main.b248bd07.chunk.js.map",
     "runtime-main.js": "/lfs-errors-dashboard/static/js/runtime-main.bc6e20a0.js",
     "runtime-main.js.map": "/lfs-errors-dashboard/static/js/runtime-main.bc6e20a0.js.map",
     "static/css/2.5bc4965f.chunk.css": "/lfs-errors-dashboard/static/css/2.5bc4965f.chunk.css",
     "static/js/2.0f11a662.chunk.js": "/lfs-errors-dashboard/static/js/2.0f11a662.chunk.js",
     "static/js/2.0f11a662.chunk.js.map": "/lfs-errors-dashboard/static/js/2.0f11a662.chunk.js.map",
     "index.html": "/lfs-errors-dashboard/index.html",
-    "precache-manifest.f7bf953d25616e2faabb14282f70e4b8.js": "/lfs-errors-dashboard/precache-manifest.f7bf953d25616e2faabb14282f70e4b8.js",
+    "precache-manifest.1011e5bfb97a8bdddff0d404f9bc0a4e.js": "/lfs-errors-dashboard/precache-manifest.1011e5bfb97a8bdddff0d404f9bc0a4e.js",
     "service-worker.js": "/lfs-errors-dashboard/service-worker.js",
     "static/css/2.5bc4965f.chunk.css.map": "/lfs-errors-dashboard/static/css/2.5bc4965f.chunk.css.map",
     "static/css/main.461ceae6.chunk.css.map": "/lfs-errors-dashboard/static/css/main.461ceae6.chunk.css.map",
@@ -21,6 +21,6 @@
     "static/css/2.5bc4965f.chunk.css",
     "static/js/2.0f11a662.chunk.js",
     "static/css/main.461ceae6.chunk.css",
-    "static/js/main.c8d447c1.chunk.js"
+    "static/js/main.b248bd07.chunk.js"
   ]
 }
