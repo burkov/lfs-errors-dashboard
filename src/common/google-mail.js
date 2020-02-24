@@ -1,6 +1,7 @@
 import {useEffect} from 'react';
 import {awaitWindowLoad} from './common';
 import _ from 'lodash';
+import dayjs from 'dayjs';
 
 const initGmailLib = ({ apiKey, onInit, onError }) => {
   const params = {
@@ -36,7 +37,7 @@ export const getMessages = async (client, ids) => {
       path: `gmail/v1/users/me/messages/${id}`,
       params: {
         format: 'metadata',
-        metadataHeaders: ['Subject', 'Date', ]
+        metadataHeaders: [ 'Subject', 'Date' ],
       },
     }));
   });
@@ -54,13 +55,15 @@ export const getMessages = async (client, ids) => {
 export const listAllIds = async (client) => {
   let pageToken = undefined;
   let result = [];
+  const after = dayjs().subtract(30, 'day').format('YYYY/MM/DD');
+  const mailList = '(<jetprofile-prod-lfs-notifications.jetbrains.com>)';
   do {
     const { result: { messages, nextPageToken } } = await client.gmail.users.messages.list({
       userId: 'me',
-      q: 'list:(<jetprofile-prod-lfs-notifications.jetbrains.com>)',
+      q: `list:${mailList} after:${after}`,
       pageToken,
     });
-    result = result.concat(_.map(messages, ({id}) => id));
+    result = result.concat(_.map(messages, ({ id }) => id));
     pageToken = nextPageToken;
   } while (!_.isNil(pageToken));
 
