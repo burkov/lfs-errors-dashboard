@@ -11,14 +11,15 @@ import ErrorsTable from '../components/ErrorsTable';
 import {getMessages, listAllIds, useGoogleMail} from '../common/google-mail';
 import {useAsyncEffect} from '../common/common';
 import * as progressActions from '../actions/progressActions';
-import {filterNewIds, getAggregatedMessages, saveMessages} from '../common/core';
+import {allSavedIds, filterNewIds, getAggregatedMessages, saveMessages} from '../common/core';
 import _ from 'lodash';
-import {version} from '../config';
 
 const clientId = '797091362316-t4kt893ttu0ls2gdbjhbq7pn7g2r22tq.apps.googleusercontent.com';
 const scope = 'https://www.googleapis.com/auth/gmail.readonly';
 const apiKey = 'AIzaSyD-QsOK6xDB1oECO1uEX-PCzi-FeauYGSo';
 const hostedDomain = 'jetbrains.com';
+
+const localhostRun = window.location.host.includes('localhost');
 
 const Dashboard = (
   {
@@ -55,9 +56,10 @@ const Dashboard = (
   useAsyncEffect(async () => {
     if (client !== undefined && isSignedIn) {
       activateProgress({ message: `Loading emails...` });
-      const ids = await listAllIds(client);
+      const ids = await (localhostRun ? allSavedIds() : listAllIds(client));
       activateProgress({ message: `Found ${ids.length} emails in LFS mail list` });
       const newIds = await filterNewIds(ids);
+      console.log(`New emails: ${newIds.length}`);
       activateProgress({ message: `Fetching ${newIds.length} new emails` });
       const result = await getMessages(client, newIds);
       await saveMessages(result);

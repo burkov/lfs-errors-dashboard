@@ -12,6 +12,10 @@ const sanitizeSubject = (subject) => {
   return subject.replace(/^(jetprofile-prod RT error: )/, '');
 };
 
+export const allSavedIds = () => {
+  return localforage.keys();
+};
+
 export const saveMessages = async (messages) => {
   const promises = messages.map(({ id, payload: { headers } }) => {
     const { value: date } = _.find(headers, ({ name }) => name.toLowerCase() === 'date');
