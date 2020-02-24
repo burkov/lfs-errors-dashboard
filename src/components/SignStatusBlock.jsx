@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './SignInSignOutBlock.module.css';
-import { Avatar } from 'antd';
+import {Avatar} from 'antd';
 
 const SignStatusBlock = ({ disabled, name, userPickLink, onSignOutClicked }) => {
   return (

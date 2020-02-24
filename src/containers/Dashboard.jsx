@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import styles from './Dashboard.module.css';
 import {connect} from 'react-redux';
 import * as authActions from '../actions/authActions';

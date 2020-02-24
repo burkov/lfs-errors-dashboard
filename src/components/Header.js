@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Header.module.css';
-import { Col, Row } from 'antd';
+import {Col, Row} from 'antd';
 import LfsLogo from '../images/lfs_logo.png';
 import SignStatusBlock from './SignStatusBlock';
 

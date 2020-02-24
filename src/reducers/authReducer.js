@@ -1,4 +1,4 @@
-import { AUTH_INIT, AUTH_INIT_ERROR, AUTH_SIGN_IN, AUTH_SIGN_OUT } from '../actions/actionTypes';
+import {AUTH_INIT, AUTH_INIT_ERROR, AUTH_SIGN_IN, AUTH_SIGN_OUT} from '../actions/actionTypes';
 
 const throwNotInitialized = () => {
   throw Error('gauth is not initialized yet');

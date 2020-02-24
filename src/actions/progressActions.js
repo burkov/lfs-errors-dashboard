@@ -1,4 +1,4 @@
-import {PROGRESS_DEACTIVATE, PROGRESS_INCREMENT, PROGRESS_ACTIVATE} from './actionTypes';
+import {PROGRESS_ACTIVATE, PROGRESS_DEACTIVATE, PROGRESS_INCREMENT} from './actionTypes';
 
 export const activateProgress = ({ message, current, max }) => ({
   type: PROGRESS_ACTIVATE,

@@ -1,4 +1,4 @@
-import {PROGRESS_DEACTIVATE, PROGRESS_INCREMENT, PROGRESS_ACTIVATE} from '../actions/actionTypes';
+import {PROGRESS_ACTIVATE, PROGRESS_DEACTIVATE, PROGRESS_INCREMENT} from '../actions/actionTypes';
 
 const initialState = {
   active: false,

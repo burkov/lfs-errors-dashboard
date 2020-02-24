@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 import _ from 'lodash';
-import { awaitWindowLoad } from './common';
+import {awaitWindowLoad} from './common';
 
 const initGoogleAuthLib = ({ clientId, hostedDomain, scope, onInit, onError }) => {
   const clientConfig = {

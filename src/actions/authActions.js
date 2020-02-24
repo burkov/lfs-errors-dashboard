@@ -1,4 +1,4 @@
-import { AUTH_INIT, AUTH_INIT_ERROR, AUTH_SIGN_IN, AUTH_SIGN_OUT } from './actionTypes';
+import {AUTH_INIT, AUTH_INIT_ERROR, AUTH_SIGN_IN, AUTH_SIGN_OUT} from './actionTypes';
 
 export const init = ({ signIn, signOut }) => ({
   type: AUTH_INIT,
@@ -8,7 +8,7 @@ export const init = ({ signIn, signOut }) => ({
 
 export const initError = (error) => ({
   type: AUTH_INIT_ERROR,
-  error
+  error,
 });
 
 export const signIn = ({ profile, tokens }) => ({
