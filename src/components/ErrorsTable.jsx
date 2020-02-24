@@ -1,5 +1,5 @@
 import React from 'react';
-import {Table, Tooltip} from 'antd';
+import {Button, Table, Tooltip} from 'antd';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
@@ -28,9 +28,23 @@ const columns = [
     title: 'Subject',
     dataIndex: 'subject',
     key: 'subject',
-    render: (subject) => <span>{subject.slice(0, 160)}</span>,
+    render: (subject, {actions: {open}}) => {
+      return (
+        <>
+          <a href={open} target='_blank'>
+            <Button icon='link' type='link'></Button>
+          </a>
+          &nbsp;
+          <span>{subject.slice(0, 160)}</span>
+        </>
+      );
+    },
   },
 ];
+
+const expandedRowRender = (data) => {
+  console.log(data);
+};
 
 const ErrorsTable = ({ messages }) => {
   return (
@@ -41,6 +55,7 @@ const ErrorsTable = ({ messages }) => {
         columns={columns}
         size='small'
         pagination={false}
+        // expandedRowRender={expandedRowRender}
       />
     </>
   );

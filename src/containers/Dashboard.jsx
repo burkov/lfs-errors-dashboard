@@ -57,6 +57,12 @@ const Dashboard = (
     if (client !== undefined && isSignedIn) {
       activateProgress({ message: `Loading emails...` });
       const ids = await (localhostRun ? allSavedIds() : listAllIds(client));
+      // const {result: res} = await client.gmail.users.messages.get({
+      //   id: _.first(ids),
+      //   userId: 'me',
+      //   format: 'metadata'
+      // });
+      // console.log(JSON.stringify(res, null, '  '));
       activateProgress({ message: `Found ${ids.length} emails in LFS mail list` });
       const newIds = await filterNewIds(ids);
       console.log(`New emails: ${newIds.length}`);

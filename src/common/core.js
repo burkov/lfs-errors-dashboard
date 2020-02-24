@@ -27,7 +27,14 @@ export const saveMessages = async (messages) => {
 };
 
 export const getAggregatedMessages = async (ids) => {
-  const messages = await Promise.all(ids.map((id) => localforage.getItem(id)));
+  const messages = await Promise.all(ids.map(async (id) => {
+    return {
+      ...(await localforage.getItem(id)),
+      actions: {
+        open: `https://mail.google.com/mail/u/0/#inbox/${id}`
+      }
+    };
+  }));
   const result = _.values(_.groupBy(messages, ({ subject }) => {
     return subject.slice(0, 20);
   })).map((entries) => {
