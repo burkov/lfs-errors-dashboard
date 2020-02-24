@@ -8,10 +8,11 @@ import Header from '../components/Header';
 import LoadingBanner from '../components/LoadingBanner';
 import LoginBanner from '../components/LoginBanner';
 import ErrorsTable from '../components/ErrorsTable';
-import {getMessage, getMessages, listAllIds, useGoogleMail} from '../common/google-mail';
+import {getMessages, listAllIds, useGoogleMail} from '../common/google-mail';
 import {useAsyncEffect} from '../common/common';
 import * as progressActions from '../actions/progressActions';
 import {filterNewIds, getAggregatedMessages, saveMessages} from '../common/core';
+import _ from 'lodash';
 
 const clientId = '797091362316-t4kt893ttu0ls2gdbjhbq7pn7g2r22tq.apps.googleusercontent.com';
 const scope = 'https://www.googleapis.com/auth/gmail.readonly';
@@ -21,8 +22,8 @@ const hostedDomain = 'jetbrains.com';
 const Dashboard = (
   {
     initialized,
-    auth: { isSignedIn, signIn, signOut, profile: { name, imageUrl } },
-    mail: { client },
+    auth: { isSignedIn, signIn, signOut, profile: { name, imageUrl }, error: authError },
+    mail: { client, error: mailError },
     progress: { current, max, message },
     onAuthInit,
     onAuthInitError,
@@ -35,7 +36,7 @@ const Dashboard = (
     deactivateProgress,
   },
 ) => {
-  const [messages, setMessages] = useState([]);
+  const [ messages, setMessages ] = useState([]);
   useGoogleAuth({
     clientId,
     hostedDomain,
@@ -78,7 +79,11 @@ const Dashboard = (
       />
       <main className={styles.mainContainer}>
         {!initialized ?
-          <LoadingBanner current={current} max={max} message={message}/> :
+          <LoadingBanner current={current}
+                         max={max}
+                         message={message}
+                         errors={_.compact([ authError, mailError ])}
+          /> :
           (!isSignedIn ?
               <LoginBanner onSignInClicked={signIn} disabled={!initialized}/> :
               <ErrorsTable messages={messages}/>
@@ -90,16 +95,20 @@ const Dashboard = (
 
 const mapStateToProps = (
   {
-    auth: { initialized: authInitialized, isSignedIn, signIn, signOut, profile },
-    mail: { initialized: mailInitialized, client },
+    auth: { initialized: authInitialized, isSignedIn, signIn, signOut, profile, error: authError },
+    mail: { initialized: mailInitialized, client, error: mailError },
     progress: { active, current, max, message },
   },
 ) => {
-  const initialized = authInitialized && mailInitialized && !active;
+  const initialized = authInitialized
+    && mailInitialized
+    && !active
+    && _.isNil(authError)
+    && _.isNil(mailError);
   return {
     initialized,
-    auth: { isSignedIn, signIn, signOut, profile },
-    mail: { client },
+    auth: { isSignedIn, signIn, signOut, profile, error: authError },
+    mail: { client, error: mailError },
     progress: { active, current, max, message },
   };
 };

@@ -6,8 +6,9 @@ export const init = ({ signIn, signOut }) => ({
   signOut,
 });
 
-export const initError = () => ({
+export const initError = (error) => ({
   type: AUTH_INIT_ERROR,
+  error
 });
 
 export const signIn = ({ profile, tokens }) => ({

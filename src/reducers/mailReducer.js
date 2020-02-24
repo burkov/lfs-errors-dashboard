@@ -1,4 +1,4 @@
-import { MAIL_INIT, MAIL_INIT_ERROR, MAIL_PROGRESS_UPDATE } from '../actions/actionTypes';
+import {MAIL_INIT, MAIL_INIT_ERROR} from '../actions/actionTypes';
 
 const initialState = {
   initialized: false,
@@ -7,7 +7,7 @@ const initialState = {
 };
 
 export const mailReducer = (state = initialState, action) => {
-  const { client, error} = action;
+  const { client, error } = action;
   switch (action.type) {
     case MAIL_INIT:
       return { ...state, client, initialized: true };
