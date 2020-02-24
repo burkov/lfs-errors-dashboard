@@ -1,5 +1,5 @@
-import {useEffect} from 'react';
-import {awaitWindowLoad} from './common';
+import { useEffect } from 'react';
+import { awaitWindowLoad } from './common';
 import _ from 'lodash';
 import dayjs from 'dayjs';
 
@@ -29,8 +29,7 @@ export const useGoogleMail = ({ apiKey, onInitialized, onInitializationError }) 
   }, []);
 };
 
-export const getMessages = async (client, ids) => {
-  if (_.isEmpty(ids)) return [];
+const readInBatch = (client, ids) => {
   const batch = client.newBatch();
   ids.forEach((id) => {
     batch.add(client.request({
@@ -42,14 +41,25 @@ export const getMessages = async (client, ids) => {
     }));
   });
   return new Promise((resolve, reject) => {
-    batch.then(
-      (response) => {
-        const { result } = response;
-        resolve(_.map(_.values(result), (e) => _.get(e, 'result')));
-      },
-      (e) => reject(e),
-    );
+    setTimeout(() => {
+      batch.then(
+        (response) => {
+          const { result } = response;
+          resolve(_.map(_.values(result), (e) => _.get(e, 'result')));
+        },
+        (e) => reject(e),
+      );
+    }, 300);
   });
+};
+
+export const getMessages = async (client, ids) => {
+  if (_.isEmpty(ids)) return [];
+  let result = [];
+  for (const idsChunk of _.chunk(ids, 100)) {
+    result = result.concat(await readInBatch(client, idsChunk));
+  }
+  return result;
 };
 
 export const listAllIds = async (client) => {

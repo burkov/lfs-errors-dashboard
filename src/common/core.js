@@ -1,10 +1,39 @@
 import localforage from 'localforage';
-import {Set} from 'immutable';
+import { Set } from 'immutable';
 import _ from 'lodash';
 import dayjs from 'dayjs';
 
+
+const mainStorage = localforage.createInstance({
+  name: 'led-main',
+});
+
+const mailsStorage = localforage.createInstance({
+  name: 'led-mails',
+});
+
+const transformSavedReadIds = async (func) => {
+  const oldReadIds = await getReadIds();
+  const newReadIds = func(oldReadIds);
+  await mainStorage.setItem('read-ids', newReadIds.toArray());
+  return newReadIds;
+};
+
+export const markRead = (newIds) =>
+  transformSavedReadIds((readIds) => readIds.union(newIds));
+
+export const markUnread = (newIds) =>
+  transformSavedReadIds((readIds) => readIds.subtract(newIds));
+
+/**
+ * @returns Set<String>
+ */
+export const getReadIds = async () => {
+  return Set((await mainStorage.getItem('read-ids')) || []);
+};
+
 export const filterNewIds = async (ids) => {
-  const knownKeys = Set(await localforage.keys());
+  const knownKeys = Set(await mailsStorage.keys());
   return _.filter(ids, (e) => !knownKeys.has(e));
 };
 
@@ -13,22 +42,33 @@ const sanitizeSubject = (subject) => {
 };
 
 export const allSavedIds = () => {
-  return localforage.keys();
+  return mailsStorage.keys();
 };
 
 export const saveMessages = async (messages) => {
-  const promises = messages.map(({ id, payload: { headers } }) => {
-    const { value: date } = _.find(headers, ({ name }) => name.toLowerCase() === 'date');
-    const { value: subject } = _.find(headers, ({ name }) => name.toLowerCase() === 'subject');
+  const promises = messages.map((message) => {
+    try {
+      const { id, payload: { headers } } = message;
+      const { value: date } = _.find(headers, ({ name }) => name.toLowerCase() === 'date');
+      const { value: subject } = _.find(headers, ({ name }) => name.toLowerCase() === 'subject');
 
-    return localforage.setItem(id, { date, subject: sanitizeSubject(subject) });
+      return mailsStorage.setItem(id, { date, subject: sanitizeSubject(subject) });
+    } catch (e) {
+      console.error(`failed to parse or save message`, message, e);
+      return undefined;
+    }
   });
   await Promise.all(promises);
 };
 
 export const getAggregatedMessages = async (ids) => {
   const messages = await Promise.all(ids.map(async (id) => {
-    const { date, ...rest } = await localforage.getItem(id);
+    let message = await mailsStorage.getItem(id);
+    if (message === null) {
+      console.error(`failed to fetch mail with id: ${id}`);
+      return undefined;
+    }
+    const { date, ...rest } = message;
     return {
       ...rest,
       id,
@@ -39,7 +79,7 @@ export const getAggregatedMessages = async (ids) => {
       },
     };
   }));
-  const result = _.values(_.groupBy(messages, ({ subject }) => {
+  const result = _.values(_.groupBy(_.compact(messages), ({ subject }) => {
     return subject.slice(0, 20);
   })).map((entries) => {
     entries.forEach((e) => {
