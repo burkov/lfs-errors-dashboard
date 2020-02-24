@@ -13,6 +13,7 @@ import {useAsyncEffect} from '../common/common';
 import * as progressActions from '../actions/progressActions';
 import {filterNewIds, getAggregatedMessages, saveMessages} from '../common/core';
 import _ from 'lodash';
+import {version} from '../config';
 
 const clientId = '797091362316-t4kt893ttu0ls2gdbjhbq7pn7g2r22tq.apps.googleusercontent.com';
 const scope = 'https://www.googleapis.com/auth/gmail.readonly';
@@ -32,7 +33,6 @@ const Dashboard = (
     onMailInit,
     onMailInitError,
     activateProgress,
-    incrementProgress,
     deactivateProgress,
   },
 ) => {
@@ -76,6 +76,7 @@ const Dashboard = (
         imageUrl={imageUrl}
         isSignedIn={isSignedIn}
         signOut={signOut}
+        version={version}
       />
       <main className={styles.mainContainer}>
         {!initialized ?

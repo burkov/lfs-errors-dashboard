@@ -1,21 +1,27 @@
 import React from 'react';
 import styles from './Header.module.css';
-import {Col, Row} from 'antd';
+import {Col, Row, Tag} from 'antd';
 import LfsLogo from '../images/lfs_logo.png';
 import SignStatusBlock from './SignStatusBlock';
 
 
-const Header = ({ name, imageUrl, isSignedIn, signOut }) => {
+const Header = ({ name, imageUrl, isSignedIn, signOut, version }) => {
   return (
     <header className={styles.header}>
       <Row>
-        <Col span={6} offset={2}>
+        <Col span={12} offset={2}>
           <div className={styles.logoContainer}>
             <img src={LfsLogo} width='48px' alt='Logo' className={styles.logo}/>
-            <h1 className={styles.logoTitle}>LFS Errors Dashboard</h1>
+            <div className={styles.titleContainer}>
+              <h1 className={styles.logoTitle}>LFS Errors Dashboard</h1>
+              &nbsp;
+              {version}
+              &nbsp;
+              released
+            </div>
           </div>
         </Col>
-        <Col offset={10} span={4}>
+        <Col offset={4} span={4}>
           {isSignedIn && <SignStatusBlock name={name}
                                           userPickLink={imageUrl}
                                           onSignOutClicked={signOut}
