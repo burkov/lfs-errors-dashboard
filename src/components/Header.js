@@ -3,7 +3,8 @@ import styles from './Header.module.css';
 import {Col, Row, Tag} from 'antd';
 import LfsLogo from '../images/lfs_logo.png';
 import SignStatusBlock from './SignStatusBlock';
-import {version, released, re} from '../config';
+import {version, released, releaseLink} from '../config';
+import dayjs from 'dayjs';
 
 const Header = ({ name, imageUrl, isSignedIn, signOut }) => {
   return (
@@ -17,7 +18,7 @@ const Header = ({ name, imageUrl, isSignedIn, signOut }) => {
               &nbsp;
               {version}
               &nbsp;
-              released
+              {released}
             </div>
           </div>
         </Col>
