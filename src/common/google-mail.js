@@ -60,7 +60,7 @@ export const listAllIds = async (client) => {
       q: 'list:(<jetprofile-prod-lfs-notifications.jetbrains.com>)',
       pageToken,
     });
-    result = result.concat(messages.map(({id}) => id));
+    result = result.concat(_.map(messages, ({id}) => id));
     pageToken = nextPageToken;
   } while (!_.isNil(pageToken));
 
