@@ -28,11 +28,15 @@ export const saveMessages = async (messages) => {
 
 export const getAggregatedMessages = async (ids) => {
   const messages = await Promise.all(ids.map(async (id) => {
+    const { date, ...rest } = await localforage.getItem(id);
     return {
-      ...(await localforage.getItem(id)),
+      ...rest,
+      id,
+      date,
+      timestamp: dayjs(date).unix(),
       actions: {
-        open: `https://mail.google.com/mail/u/0/#inbox/${id}`
-      }
+        open: `https://mail.google.com/mail/u/0/#inbox/${id}`,
+      },
     };
   }));
   const result = _.values(_.groupBy(messages, ({ subject }) => {
@@ -42,7 +46,12 @@ export const getAggregatedMessages = async (ids) => {
       e.timestamp = dayjs(e.date).unix();
     });
     const last = _.maxBy(entries, 'timestamp');
-    return { ...last, number: entries.length };
+    const { id: lastId } = last;
+    return {
+      ...last,
+      number: entries.length,
+      others: _.reverse(_.sortBy(_.remove(entries, ({ id }) => id !== lastId), 'timestamp')),
+    };
   });
   return _.reverse(_.sortBy(result, 'timestamp'));
 };

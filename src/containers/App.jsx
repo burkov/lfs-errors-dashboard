@@ -7,9 +7,12 @@ import rootReducer from '../reducers';
 import Dashboard from './Dashboard';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import {Helmet} from 'react-helmet/es/Helmet';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 const store = createStore(rootReducer, composeWithDevTools());
 
+dayjs.extend(relativeTime);
 
 function App() {
   return (
