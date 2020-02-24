@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "7686b64b3fd5f56b9df5e1ff83dd7b36",
+    "revision": "1194fd65faf0c881d1cbf10cc6f3a968",
     "url": "/lfs-errors-dashboard/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/lfs-errors-dashboard/static/css/2.5bc4965f.chunk.css"
   },
   {
-    "revision": "db3169106bcc4204d598",
+    "revision": "4a883705c1b9a45ee673",
     "url": "/lfs-errors-dashboard/static/css/main.119606b0.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/lfs-errors-dashboard/static/js/2.d98766c4.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "db3169106bcc4204d598",
-    "url": "/lfs-errors-dashboard/static/js/main.9fafa8ae.chunk.js"
+    "revision": "4a883705c1b9a45ee673",
+    "url": "/lfs-errors-dashboard/static/js/main.21bf23c3.chunk.js"
   },
   {
     "revision": "e0c257df9b69dfa8b9a5",
