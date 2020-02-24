@@ -1,26 +1,26 @@
 {
   "files": {
-    "main.css": "/lfs-errors-dashboard/static/css/main.461ceae6.chunk.css",
-    "main.js": "/lfs-errors-dashboard/static/js/main.b248bd07.chunk.js",
-    "main.js.map": "/lfs-errors-dashboard/static/js/main.b248bd07.chunk.js.map",
+    "main.css": "/lfs-errors-dashboard/static/css/main.1cb479aa.chunk.css",
+    "main.js": "/lfs-errors-dashboard/static/js/main.95eb7562.chunk.js",
+    "main.js.map": "/lfs-errors-dashboard/static/js/main.95eb7562.chunk.js.map",
     "runtime-main.js": "/lfs-errors-dashboard/static/js/runtime-main.bc6e20a0.js",
     "runtime-main.js.map": "/lfs-errors-dashboard/static/js/runtime-main.bc6e20a0.js.map",
     "static/css/2.5bc4965f.chunk.css": "/lfs-errors-dashboard/static/css/2.5bc4965f.chunk.css",
-    "static/js/2.0f11a662.chunk.js": "/lfs-errors-dashboard/static/js/2.0f11a662.chunk.js",
-    "static/js/2.0f11a662.chunk.js.map": "/lfs-errors-dashboard/static/js/2.0f11a662.chunk.js.map",
+    "static/js/2.879cef1b.chunk.js": "/lfs-errors-dashboard/static/js/2.879cef1b.chunk.js",
+    "static/js/2.879cef1b.chunk.js.map": "/lfs-errors-dashboard/static/js/2.879cef1b.chunk.js.map",
     "index.html": "/lfs-errors-dashboard/index.html",
-    "precache-manifest.1011e5bfb97a8bdddff0d404f9bc0a4e.js": "/lfs-errors-dashboard/precache-manifest.1011e5bfb97a8bdddff0d404f9bc0a4e.js",
+    "precache-manifest.360078509d28ebc4b7cc20e3412871a5.js": "/lfs-errors-dashboard/precache-manifest.360078509d28ebc4b7cc20e3412871a5.js",
     "service-worker.js": "/lfs-errors-dashboard/service-worker.js",
     "static/css/2.5bc4965f.chunk.css.map": "/lfs-errors-dashboard/static/css/2.5bc4965f.chunk.css.map",
-    "static/css/main.461ceae6.chunk.css.map": "/lfs-errors-dashboard/static/css/main.461ceae6.chunk.css.map",
-    "static/js/2.0f11a662.chunk.js.LICENSE.txt": "/lfs-errors-dashboard/static/js/2.0f11a662.chunk.js.LICENSE.txt",
+    "static/css/main.1cb479aa.chunk.css.map": "/lfs-errors-dashboard/static/css/main.1cb479aa.chunk.css.map",
+    "static/js/2.879cef1b.chunk.js.LICENSE.txt": "/lfs-errors-dashboard/static/js/2.879cef1b.chunk.js.LICENSE.txt",
     "static/media/lfs_logo.png": "/lfs-errors-dashboard/static/media/lfs_logo.aaf7ea0d.png"
   },
   "entrypoints": [
     "static/js/runtime-main.bc6e20a0.js",
     "static/css/2.5bc4965f.chunk.css",
-    "static/js/2.0f11a662.chunk.js",
-    "static/css/main.461ceae6.chunk.css",
-    "static/js/main.b248bd07.chunk.js"
+    "static/js/2.879cef1b.chunk.js",
+    "static/css/main.1cb479aa.chunk.css",
+    "static/js/main.95eb7562.chunk.js"
   ]
 }
