@@ -40,10 +40,7 @@ const ErrorsTable = ({ messages }) => {
         dataSource={messages}
         columns={columns}
         size='small'
-        pagination={{
-          position: 'top',
-          pageSize: 50,
-        }}
+        pagination={false}
       />
     </>
   );
