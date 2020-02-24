@@ -3,9 +3,9 @@ import styles from './Header.module.css';
 import {Col, Row, Tag} from 'antd';
 import LfsLogo from '../images/lfs_logo.png';
 import SignStatusBlock from './SignStatusBlock';
+import {version, released, re} from '../config';
 
-
-const Header = ({ name, imageUrl, isSignedIn, signOut, version }) => {
+const Header = ({ name, imageUrl, isSignedIn, signOut }) => {
   return (
     <header className={styles.header}>
       <Row>

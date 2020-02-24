@@ -76,7 +76,6 @@ const Dashboard = (
         imageUrl={imageUrl}
         isSignedIn={isSignedIn}
         signOut={signOut}
-        version={version}
       />
       <main className={styles.mainContainer}>
         {!initialized ?
