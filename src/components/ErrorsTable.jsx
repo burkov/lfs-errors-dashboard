@@ -2,6 +2,7 @@ import React from 'react';
 import {Button, Table, Tooltip} from 'antd';
 import dayjs from 'dayjs';
 import styles from './ErrorsTable.module.css'
+import _ from 'lodash';
 
 const subjectColumn = {
   title: 'Subject',
@@ -46,6 +47,7 @@ const mainTableColumns = [
 
 
 const expandedRowRender = ({ others }) => {
+  if(_.isEmpty(others)) return false;
   console.log(others);
   const columns = [
     dateColumn({ title: 'Date' }),
@@ -70,6 +72,7 @@ const ErrorsTable = ({ messages }) => {
     <>
       <Table
         rowKey='id'
+        expandRowByClick={true}
         dataSource={messages}
         columns={mainTableColumns}
         size='small'
