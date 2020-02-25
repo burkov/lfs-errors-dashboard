@@ -1,27 +1,27 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "38a784e83f103b8d565205a5d9567d88",
+    "revision": "9401e1ce90f38b9be7ffa13477122f9d",
     "url": "/lfs-errors-dashboard/index.html"
   },
   {
-    "revision": "5db3ecc464b19941d0ac",
+    "revision": "f8ebadfc76323b4e23af",
     "url": "/lfs-errors-dashboard/static/css/2.5bc4965f.chunk.css"
   },
   {
-    "revision": "0a208fbb1430b892e71f",
+    "revision": "8dcf07d7ecd0805dd38a",
     "url": "/lfs-errors-dashboard/static/css/main.c9132af1.chunk.css"
   },
   {
-    "revision": "5db3ecc464b19941d0ac",
-    "url": "/lfs-errors-dashboard/static/js/2.234bfb8c.chunk.js"
+    "revision": "f8ebadfc76323b4e23af",
+    "url": "/lfs-errors-dashboard/static/js/2.bc053883.chunk.js"
   },
   {
     "revision": "46f63f8626516ab37e48a023f0c6fcd4",
-    "url": "/lfs-errors-dashboard/static/js/2.234bfb8c.chunk.js.LICENSE.txt"
+    "url": "/lfs-errors-dashboard/static/js/2.bc053883.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "0a208fbb1430b892e71f",
-    "url": "/lfs-errors-dashboard/static/js/main.664e6e51.chunk.js"
+    "revision": "8dcf07d7ecd0805dd38a",
+    "url": "/lfs-errors-dashboard/static/js/main.2bcbbdd2.chunk.js"
   },
   {
     "revision": "e0c257df9b69dfa8b9a5",
