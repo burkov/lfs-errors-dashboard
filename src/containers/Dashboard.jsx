@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import styles from './Dashboard.module.css';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import * as authActions from '../actions/authActions';
 import * as mailActions from '../actions/mailActions';
-import { useGoogleAuth } from '../common/google-auth';
+import {useGoogleAuth} from '../common/google-auth';
 import Header from '../components/Header';
 import LoadingBanner from '../components/LoadingBanner';
 import LoginBanner from '../components/LoginBanner';
 import ErrorsTable from '../components/ErrorsTable';
-import { getMessages, listAllIds, useGoogleMail } from '../common/google-mail';
-import { useAsyncEffect } from '../common/common';
+import {getMessages, listAllIds, moveToTrash, useGoogleMail} from '../common/google-mail';
+import {useAsyncEffect} from '../common/common';
 import * as progressActions from '../actions/progressActions';
 import {
   allSavedIds,
@@ -20,11 +20,12 @@ import {
   markUnread,
   saveMessages,
 } from '../common/core';
-import { Set } from 'immutable';
+import {Set} from 'immutable';
 import _ from 'lodash';
+import {Helmet} from 'react-helmet/es/Helmet';
 
 const clientId = '797091362316-t4kt893ttu0ls2gdbjhbq7pn7g2r22tq.apps.googleusercontent.com';
-const scope = 'https://www.googleapis.com/auth/gmail.readonly';
+const scope = 'https://www.googleapis.com/auth/gmail.modify';
 const apiKey = 'AIzaSyD-QsOK6xDB1oECO1uEX-PCzi-FeauYGSo';
 const hostedDomain = 'jetbrains.com';
 
@@ -65,7 +66,7 @@ const Dashboard = (
   useAsyncEffect(async () => {
     if (client !== undefined && isSignedIn) {
       activateProgress({ message: `Loading emails...` });
-      const ids = await (false ? allSavedIds() : listAllIds(client));
+      const ids = await (localhostRun ? allSavedIds() : listAllIds(client));
       activateProgress({ message: `Found ${ids.length} emails in LFS mail list` });
       const newIds = await filterNewIds(ids);
       console.log(`New emails: ${newIds.length}`);
@@ -89,8 +90,25 @@ const Dashboard = (
     setReadIds(Set(await markUnread(selectedRowIds)));
   };
 
+  const onMoveToTrashClicked = async (selectedRowIds) => {
+    const set = Set(selectedRowIds);
+    const [ newMessages, removed ] = _.partition(messages, ({ id }) => !set.has(id));
+    const idsToRemove = _.flatMap(removed, ({ id, others }) => [ id, ...(_.map(others, ({ id }) => id)) ]);
+    activateProgress({ message: 'Moving emails to trash', current: 0, max: idsToRemove.length });
+    await moveToTrash(client, idsToRemove, (current) => {
+      activateProgress({ message: 'Moving emails to trash', current, max: idsToRemove.length });
+    });
+    deactivateProgress();
+    setMessages(newMessages);
+  };
+
+  const totalEmails = _.reduce(messages, (acc, { others }) => others.length + 1 + acc, 0);
+
   return (
     <>
+      <Helmet>
+        <title>({totalEmails.toString()}) LFS errors dashboard</title>
+      </Helmet>
       <Header
         name={name}
         imageUrl={imageUrl}
@@ -109,6 +127,7 @@ const Dashboard = (
               <ErrorsTable messages={messages}
                            onMarkReadClicked={onMarkReadClicked}
                            onMarkUnreadClicked={onMarkUnreadClicked}
+                           onMoveToTrashClicked={onMoveToTrashClicked}
                            readIds={readIds}
               />
           )}

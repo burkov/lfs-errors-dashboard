@@ -6,7 +6,6 @@ import {createStore} from 'redux';
 import rootReducer from '../reducers';
 import Dashboard from './Dashboard';
 import {composeWithDevTools} from 'redux-devtools-extension';
-import {Helmet} from 'react-helmet/es/Helmet';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
@@ -17,9 +16,6 @@ dayjs.extend(relativeTime);
 function App() {
   return (
     <>
-      <Helmet>
-        <title>LFS errors dashboard</title>
-      </Helmet>
       <Provider store={store}>
         <Dashboard/>
       </Provider>

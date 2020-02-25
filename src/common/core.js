@@ -1,5 +1,5 @@
 import localforage from 'localforage';
-import { Set } from 'immutable';
+import {Set} from 'immutable';
 import _ from 'lodash';
 import dayjs from 'dayjs';
 
@@ -46,19 +46,17 @@ export const allSavedIds = () => {
 };
 
 export const saveMessages = async (messages) => {
-  const promises = messages.map((message) => {
+  for (const message of messages) {
     try {
       const { id, payload: { headers } } = message;
       const { value: date } = _.find(headers, ({ name }) => name.toLowerCase() === 'date');
       const { value: subject } = _.find(headers, ({ name }) => name.toLowerCase() === 'subject');
 
-      return mailsStorage.setItem(id, { date, subject: sanitizeSubject(subject) });
+      await mailsStorage.setItem(id, { date, subject: sanitizeSubject(subject) });
     } catch (e) {
       console.error(`failed to parse or save message`, message, e);
-      return undefined;
     }
-  });
-  await Promise.all(promises);
+  }
 };
 
 export const getAggregatedMessages = async (ids) => {

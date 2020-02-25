@@ -5,7 +5,7 @@ import styles from './LoadingBanner.module.css';
 const LoadingBanner = ({ current, max, message, errors }) => {
   const havePercent = current !== undefined && max !== undefined;
   const percent = havePercent && (
-    parseInt(current) * 100 / parseInt(max)
+    Math.round(parseInt(current) * 100 / parseInt(max))
   );
   return (
     <div className={styles.container}>

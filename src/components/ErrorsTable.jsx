@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { Button, Table, Tooltip } from 'antd';
+import React, {useMemo, useState} from 'react';
+import {Button, Table, Tooltip} from 'antd';
 import dayjs from 'dayjs';
 import styles from './ErrorsTable.module.css';
 import _ from 'lodash';
@@ -43,7 +43,7 @@ const dateColumn = ({ title, readIds }) => ({
 const expandedRowRender = ({ others }) => {
   if (_.isEmpty(others)) return false;
   const columns = [
-    dateColumn({ title: 'Date'}),
+    dateColumn({ title: 'Date' }),
     subjectColumn(),
   ];
   return <Table
@@ -60,7 +60,7 @@ const expandedRowRender = ({ others }) => {
   />;
 };
 
-const ErrorsTable = ({ messages, onMarkReadClicked, onMarkUnreadClicked, readIds }) => {
+const ErrorsTable = ({ messages, onMarkReadClicked, onMarkUnreadClicked, onMoveToTrashClicked, readIds }) => {
   const [ selectedRowKeys, setSelectedRowKeys ] = useState([]);
   const rowSelection = {
     onChange: setSelectedRowKeys,
@@ -87,6 +87,11 @@ const ErrorsTable = ({ messages, onMarkReadClicked, onMarkUnreadClicked, readIds
         <Button icon='check' onClick={() => onMarkReadClicked(selectedRowKeys)}>Mark read</Button>
         &nbsp;
         <Button icon='close' onClick={() => onMarkUnreadClicked(selectedRowKeys)}>Mark un-read</Button>
+        &nbsp;
+        <Button icon='delete' type='danger' onClick={() => {
+          onMoveToTrashClicked(selectedRowKeys);
+          setSelectedRowKeys([]);
+        }}>Move to trash</Button>
         <div className={styles.selectionCount}>
           {selectedRowKeys.length} threads selected
         </div>
